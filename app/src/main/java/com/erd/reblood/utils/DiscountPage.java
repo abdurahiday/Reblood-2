@@ -9,7 +9,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -134,20 +133,14 @@ public class DiscountPage extends AppCompatActivity {
 
 //                        collapsingToolbarLayout.setTitle(merchantname);
 //                        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+
                         collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
                         textStoreName.setText(storename);
-//                        toolbar.setTitle(merchantname);
                         textViewDiscount.setText(disc);
-                        Log.d(TAG, disc);
-                        //textViewDiscount.setVisibility(View.VISIBLE);
 
-                        // Passes flag images URL into ImageLoader.class
-                        //Log.e("LINK_IMAGE",link_image);
-                        //imageLoader.DisplayImage(link_image, imageViewStore);
                         hideDialog();
 
                     }else {
-                        // Error in login. Get the error message
                         hideDialog();
                         alertDialogBuilder.setMessage("Qr Code does not exist");
                         alertDialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -160,24 +153,18 @@ public class DiscountPage extends AppCompatActivity {
                         });
                         AlertDialog alertDialog = alertDialogBuilder.create();
                         alertDialog.show();
-                        //Toast.makeText(getApplicationContext(),
-                        //        "Qr Code does not exist", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
-                    // JSON error
                     e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                //Log.e("Transaction Error: ", error.getMessage());
                 if (error != null){ //NULL DATA GIVEN
                     hideDialog();
 
-                    //Toast.makeText(DiscountPage.this, "", Toast.LENGTH_LONG).show();
                     AppController.getInstance().cancelPendingRequests(this);
 
                     alertDialogBuilder.setMessage("Fail to recognize the QR Code, Please Try Again");
@@ -191,7 +178,6 @@ public class DiscountPage extends AppCompatActivity {
                     });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-
                 }
             }
         }) {
@@ -205,15 +191,12 @@ public class DiscountPage extends AppCompatActivity {
                 params.put("cid", cid);
                 return params;
             }
-
         };
-
         strReq.setRetryPolicy(new DefaultRetryPolicy(
                 DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 

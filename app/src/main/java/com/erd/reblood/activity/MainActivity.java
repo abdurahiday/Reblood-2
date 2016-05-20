@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
-                    //logoutUser();
+                    logoutUser();
                 }
             });
 
@@ -124,6 +124,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             super.onBackPressed();
             finish();
         }
+    }
+
+    private void logoutUser() {
+        session.setLogin(false);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 
 }

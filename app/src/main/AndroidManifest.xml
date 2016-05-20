@@ -3,9 +3,9 @@
     package="com.erd.reblood">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".app.AppController"
@@ -13,7 +13,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
@@ -23,12 +24,20 @@
         </activity>
 
         <activity android:name=".activity.EventActivity"
-            android:label="Event" >
+            android:label="Event"
+            android:parentActivityName=".activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
 
         </activity>
 
         <activity android:name=".activity.EventDetailActivity"
-            android:label="Event Detail">
+            android:label="Event Detail"
+            android:parentActivityName=".activity.EventActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.EventActivity" />
 
         </activity>
 
@@ -45,7 +54,11 @@
         <activity android:name=".utils.BarcodeScanner"
             android:label="QR Code Scanner"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:parentActivityName=".activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
 
         </activity>
 
@@ -56,12 +69,20 @@
         </activity>
 
         <activity android:name=".activity.HistoryActivity"
-            android:label="History">
+            android:label="History"
+            android:parentActivityName=".activity.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
 
         </activity>
 
         <activity android:name=".activity.HistoryDetailActivity"
-            android:label="History Detail">
+            android:label="History Detail"
+            android:parentActivityName=".activity.HistoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HistoryActivity" />
 
         </activity>
 
