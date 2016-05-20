@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.android.volley.toolbox.ImageLoader;
 import com.erd.reblood.R;
 import com.erd.reblood.app.AppController;
@@ -20,42 +22,16 @@ import java.util.List;
  * Created by Ersa Rizki Dimitri on 12-12-2015.
  */
 public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdapter.VersionViewHolder> {
-
-    //List<String> versionModels;
-    //Boolean isHomeList = false;
-    //public static List<String> homeActivitiesList = new ArrayList<String>();
-    //public static List<String> homeActivitiesSubList = new ArrayList<String>();
     private List<Event> restaurantList;
-    //private final LayoutInflater mInflater;
     Context context;
     OnItemClickListener clickListener;
     ImageLoader imageLoader;
 
-    /*
-    public void setHomeActivitiesList(Context context) {
-        String[] listArray = context.getResources().getStringArray(R.array.home_activities);
-        String[] subTitleArray = context.getResources().getStringArray(R.array.home_activities_subtitle);
-        for (int i = 0; i < listArray.length; ++i) {
-            homeActivitiesList.add(listArray[i]);
-            homeActivitiesSubList.add(subTitleArray[i]);
-        }
-    }
-    */
-
-    /*
-    public SimpleRecyclerAdapter(Context context, List<Restaurant> models) {
-        mInflater = LayoutInflater.from(context);
-        restaurantList = new ArrayList<>(models);
-    }*/
-
     public EventRecyclerAdapter(Context context) {
-        //isHomeList = true;
         this.context = context;
-        //setHomeActivitiesList(context);
     }
 
     public EventRecyclerAdapter(List<Event> restaurantList, OnItemClickListener listener) {
-        //isHomeList = false;
         this.restaurantList = restaurantList;
         this.clickListener = listener;
 
@@ -71,25 +47,21 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
 
     @Override
     public void onBindViewHolder(VersionViewHolder versionViewHolder, int i) {
-        //if (isHomeList) {
-        //versionViewHolder.titleRes.setText(restaurantList.get(i).title);
-        //versionViewHolder.alamatRes.setText(restaurantList.get(i).alamat);
-        //versionViewHolder.picRes.setImageUrl(restaurantList.get(i).urlpic, imageLoader);
-
         final Event model = restaurantList.get(i);
         versionViewHolder.bind(model, clickListener);
 
-        //} else {
-        //versionViewHolder.title.setText(restaurantList.get(i).title);
-        //versionViewHolder.alamat.setText(restaurantList.get(i).alamat);
-        //}
+        //TextDrawable Code
+        String firstLetter = String.valueOf(model.getStore_name().charAt(0));
+        ColorGenerator generator = ColorGenerator.MATERIAL;
+        int color = generator.getColor(model.getStore_name());
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(firstLetter, color);
+
+        versionViewHolder.picRes.setImageDrawable(drawable);
     }
 
     @Override
     public int getItemCount() {
-        //if (isHomeList)
-        //return homeActivitiesList == null ? 0 : homeActivitiesList.size();
-        //else
         return restaurantList == null ? 0 : restaurantList.size();
     }
 
@@ -159,12 +131,6 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
             cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
             picRes = (ImageView) itemView.findViewById(R.id.imageView2);
             titleRes = (TextView) itemView.findViewById(R.id.merchantName);
-
-            //if (isHomeList) {
-            //itemView.setOnClickListener(this);
-            //} else {
-            //alamatRes.setVisibility(View.GONE);
-            //}
 
         }
 

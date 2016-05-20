@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -19,12 +20,16 @@ import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by E.R.D on 4/2/2016.
  */
 @SuppressWarnings("ALL")
 
 public class BarcodeScanner extends AppCompatActivity {
+    private FrameLayout preview;
     private Camera mCamera;
     private CameraPreview mPreview;
     private Handler autoFocusHandler;
@@ -35,6 +40,8 @@ public class BarcodeScanner extends AppCompatActivity {
     private boolean barcodeScanned = false;
     private boolean previewing = true;
 
+    @BindView(R.id.toolbar)Toolbar toolbar;
+
     static {
         System.loadLibrary("iconv");
     }
@@ -43,17 +50,16 @@ public class BarcodeScanner extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.barcode_scanner);
+        ButterKnife.bind(this);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initControls();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home){
             finish();
@@ -68,14 +74,13 @@ public class BarcodeScanner extends AppCompatActivity {
         autoFocusHandler = new Handler();
         mCamera = getCameraInstance();
 
-        // Instance barcode scanner
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
 
         mPreview = new CameraPreview(BarcodeScanner.this, mCamera, previewCb,
                 autoFocusCB);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.cameraPreview);
+        preview = (FrameLayout) findViewById(R.id.cameraPreview);
         preview.addView(mPreview);
 
         if (barcodeScanned) {
@@ -86,8 +91,9 @@ public class BarcodeScanner extends AppCompatActivity {
             mCamera.autoFocus(autoFocusCB);
         }
 
-        //scanButton = (Button) findViewById(R.id.ScanButton);
-/*
+        /*
+        scanButton = (Button) findViewById(R.id.ScanButton);
+
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (barcodeScanned) {
@@ -111,20 +117,46 @@ public class BarcodeScanner extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mCamera == null) {
+            mCamera.setPreviewCallback(previewCb);
+            mCamera = getCameraInstance();
+        }
+
+        if (mPreview == null) {
+            mPreview = new CameraPreview(this, mCamera, previewCb, autoFocusCB);
+            preview.addView(mPreview);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mCamera != null) {
+            mPreview.getHolder().removeCallback(mPreview);
+            mCamera.release();
+            mCamera = null;
+        }
+
+        if (mPreview != null) {
+            preview.removeView(mPreview);
+            mPreview = null;
+        }
+    }
 
     /**
      * A safe way to get an instance of the Camera object.
      */
     public static Camera getCameraInstance() {
-        //Log.d("cameracoba","camera"+getCameraInstance().toString());
-
         Camera c = null;
         try {
             c = Camera.open();
         } catch (Exception e) {
 
         }return c;
-
     }
 
     private void releaseCamera() {
@@ -143,10 +175,6 @@ public class BarcodeScanner extends AppCompatActivity {
         }
     };
 
-    //Intent intent = getIntent();
-    //final String amount = intent.getStringExtra("sale");
-
-
     Camera.PreviewCallback previewCb = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera) {
             Camera.Parameters parameters = camera.getParameters();
@@ -155,7 +183,6 @@ public class BarcodeScanner extends AppCompatActivity {
             Intent intent = getIntent();
             String amount1 = ""; //28012016
             String cid = intent.getStringExtra("cid");
-            //Log.d("cidmain3", "cidmain3" + cid);
 
             Image barcode = new Image(size.width, size.height, "Y800");
             barcode.setData(data);
@@ -179,19 +206,9 @@ public class BarcodeScanner extends AppCompatActivity {
                     myIntent.putExtra("merchantid",scanResult);
                     myIntent.putExtra("amount", amount1);
                     myIntent.putExtra("cid",cid);
-                    //Log.d("scanresult", "scanresult" + scanResult);
                     startActivity(myIntent);
 
                     mCamera.release();
-
-                    //startActivity(new Intent(TotalAmount.this, BarcodeScanner.class));
-
-
-
-                    //showAlertDialog(scanResult);
-
-                  /*  Toast.makeText(BarcodeScanner.this, scanResult,
-                            Toast.LENGTH_SHORT).show();*/
 
                     barcodeScanned = true;
                     break;
@@ -207,19 +224,16 @@ public class BarcodeScanner extends AppCompatActivity {
         }
     };
 
-/*
+    /*
     private void showAlertDialog(String message) {
-
         new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.app_name))
                 .setCancelable(false)
                 .setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 })
-
                 .show();
     }
     */

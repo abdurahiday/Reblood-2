@@ -1,5 +1,6 @@
 package com.erd.reblood.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +33,8 @@ import butterknife.ButterKnife;
 /**
  * Created by ILM on 5/12/2016.
  */
-public class ListEventActivity extends BaseActivity{
-    private String TAG = RegisterActivity.class.getSimpleName();
+public class EventActivity extends BaseActivity{
+    private String TAG = EventActivity.class.getSimpleName();
     private static final String url = Constants.BASE_URL + "/transaction/event";
     private String jsonResponse;
     private JSONArray data;
@@ -51,40 +52,31 @@ public class ListEventActivity extends BaseActivity{
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
 
-
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
         restaurantList = new ArrayList<>();
-        //for (int i = 0; i < VersionModel.data.length; i++) {
-        //list.add(VersionModel.data[i]);
-        //}
 
         adapter = new EventRecyclerAdapter(restaurantList, new EventRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Event model) {
-//                String title = model.getJudul();
-//                String snipp = model.getSnippet();
-//                String isi = model.getIsi_berita();
-//                String gambar = model.getGambar();
-//
-//                Intent intent = new Intent(getActivity(), DetailBeritaActivity.class);
-//
-//                intent.putExtra("judul", title);
-//                intent.putExtra("snippet", snipp);
-//                intent.putExtra("isi", isi);
-//                intent.putExtra("gambar", gambar);
-//
-//                startActivity(intent);
+            String title = model.getStore_name();
+            String desc = model.getDescription();
+            String street = model.getStreet();
+
+            Intent intent = new Intent(EventActivity.this, EventDetailActivity.class);
+            intent.putExtra("judul", title);
+            intent.putExtra("desc", desc);
+            intent.putExtra("street", street);
+            startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);
-
         getEventFromAPI();
-
     }
 
     private void getEventFromAPI() {
@@ -126,21 +118,8 @@ public class ListEventActivity extends BaseActivity{
                         jsonResponse += "Phone: "   + phone     + "\n";
 
                         Log.d(TAG, jsonResponse);
-                        //txtResponse.setText(jsonResponse);
-
-//                        Log.d(TAG, String.valueOf(lati));
-//                        Log.d(TAG, String.valueOf(lngi));
-//
-//                        lati = Double.parseDouble(lat);
-//                        lngi = Double.parseDouble(lng);
-//
-//                        LatLng koor = new LatLng(lati, lngi);
-//
-//                        Constants.BAY_AREA_LANDMARKS.put(sname,koor);
-                        //Log.d(TAG, String.valueOf(Constants.BAY_AREA_LANDMARKS));
 
                     }
-                    //txtResponse.setText(jsonResponse);
                     adapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {

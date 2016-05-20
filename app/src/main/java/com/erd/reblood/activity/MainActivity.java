@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,15 +29,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
     @BindView(R.id.nav_view) NavigationView navigationView;
-    SessionManager session;
+    private SessionManager session;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // Session manager
+        setSupportActionBar(toolbar);
+
         session = new SessionManager(getApplicationContext());
         if (!session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
@@ -44,8 +46,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             startActivity(intent);
             finish();
         }
-
-        setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ListEventActivity.class);
+                Intent intent = new Intent(MainActivity.this, EventActivity.class);
                 startActivity(intent);
             }
         });

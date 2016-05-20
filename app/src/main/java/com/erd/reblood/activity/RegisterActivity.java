@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,6 +26,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.erd.reblood.BaseActivity;
 import com.erd.reblood.R;
 import com.erd.reblood.app.AppController;
 import com.erd.reblood.utils.Constants;
@@ -40,49 +39,46 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by E.R.D on 4/2/2016.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
 
     private static final String url = Constants.BASE_URL + "/users/register";
-    private TextInputLayout inputLayoutPhone, inputLayoutEmail, inputLayoutPassword, inputLayoutFirstName, inputLayoutLastName;
-    EditText et_firstName, et_lastName, et_email,et_phoneNumber,et_newPassword;
-    Button bt_register;
-    TextView tv_backToLogin;
-    String firstName, lastName, email, phoneNumber, newPassword;
-    AlertDialog.Builder alertDialogBuilder;
+    private static final String TAG = RegisterActivity.class.getName();
+    private String firstName, lastName, email, phoneNumber, newPassword;
+    private AlertDialog.Builder alertDialogBuilder;
     private ProgressDialog pDialog;
-    private static final String TAG = RegisterActivity.class.getName(); //ersa boleh hapus
-    private CoordinatorLayout coordinatorLayout;
+
+    @BindView(R.id.input_layout_first_name) TextInputLayout inputLayoutFirstName;
+    @BindView(R.id.input_layout_last_name) TextInputLayout inputLayoutLastName;
+    @BindView(R.id.input_layout_phone) TextInputLayout inputLayoutPhone;
+    @BindView(R.id.input_layout_email) TextInputLayout inputLayoutEmail;
+    @BindView(R.id.input_layout_password) TextInputLayout inputLayoutPassword;
+
+    @BindView(R.id.et_first_name) EditText et_firstName;
+    @BindView(R.id.et_last_name) EditText et_lastName;
+    @BindView(R.id.et_email) EditText et_email;
+    @BindView(R.id.et_phoneNumber) EditText et_phoneNumber;
+    @BindView(R.id.et_newPassword) EditText et_newPassword;
+
+    @BindView(R.id.buttonRegister) Button bt_register;
+    @BindView(R.id.btnLinkToLogin) Button tv_backToLogin;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
-                .coordinatorLayout);
-
-        // Alert Dialog
         alertDialogBuilder = new AlertDialog.Builder(RegisterActivity.this, R.style.AppCompatAlertDialogStyle);
         alertDialogBuilder.setCancelable(false);
-
-        inputLayoutFirstName = (TextInputLayout) findViewById(R.id.input_layout_first_name);
-        inputLayoutLastName = (TextInputLayout) findViewById(R.id.input_layout_last_name);
-        inputLayoutPhone = (TextInputLayout) findViewById(R.id.input_layout_phone);
-        inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
-        inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
-
-        et_firstName = (EditText)findViewById(R.id.et_first_name);
-        et_lastName = (EditText)findViewById(R.id.et_last_name);
-        et_email = (EditText)findViewById(R.id.et_email);
-        et_phoneNumber = (EditText)findViewById(R.id.et_phoneNumber);
-        et_newPassword = (EditText)findViewById(R.id.et_newPassword);
-
-        bt_register = (Button)findViewById(R.id.buttonRegister);
-        tv_backToLogin = (TextView)findViewById(R.id.btnLinkToLogin);
 
         et_firstName.setTypeface(Typeface.DEFAULT);
         et_lastName.setTypeface(Typeface.DEFAULT);
@@ -98,7 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
         et_email.addTextChangedListener(new MyTextWatcher(et_email));
         et_newPassword.addTextChangedListener(new MyTextWatcher(et_newPassword));
 
-        // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
@@ -156,7 +151,6 @@ public class RegisterActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    // call this method when you need to check phone number validation
     public static boolean isPhoneNumberValid(String phoneNumber) {
         int intIndex = phoneNumber.indexOf("08");
         return intIndex == 0 && phoneNumber.trim().length() > 9;
@@ -268,7 +262,6 @@ public class RegisterActivity extends AppCompatActivity {
                     JSONObject jObj = new JSONObject(response);
                     String error = jObj.getString("response");
 
-                    // Check for code node in json
                     if (error.equals("00")){
 
                         JSONObject data = jObj.getJSONObject("status");
@@ -333,7 +326,6 @@ public class RegisterActivity extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() {
-                // Posting params to register url
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("firstname", firstName);
                 params.put("lastname", lastName);
@@ -346,7 +338,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                // Removed this line if you dont need it or Use application/json
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 return params;
             }
@@ -357,7 +348,6 @@ public class RegisterActivity extends AppCompatActivity {
                 0,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq);
     }
 

@@ -2,6 +2,7 @@ package com.erd.reblood.utils;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -54,9 +55,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         //Log.d("DBG", "Error setting camera preview: "+holder.toString());
 
         try {
+            if(mCamera==null){
+                mCamera=Camera.open();
+            }
             mCamera.setPreviewDisplay(holder);
         } catch (IOException e) {
-            //Log.d("o", "Error setting camera preview: " + e.getMessage());
+            Log.d("o", "Error setting camera preview: " + e.getMessage());
         }
     }
 

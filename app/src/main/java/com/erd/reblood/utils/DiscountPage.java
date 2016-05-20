@@ -3,11 +3,13 @@ package com.erd.reblood.utils;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,6 +29,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * Created by E.R.D on 4/2/2016.
@@ -39,10 +44,11 @@ public class DiscountPage extends AppCompatActivity {
     Button buttonClose;
     ImageView imageViewStore;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    Toolbar toolbar;
     ImageLoader imageLoader = new ImageLoader(this);
     AlertDialog.Builder alertDialogBuilder;
     String disc;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     /** The default socket timeout in milliseconds */
     public static final int DEFAULT_TIMEOUT_MS = 0;
@@ -57,13 +63,15 @@ public class DiscountPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discount_page);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         // Declare
-        textViewDiscount = (TextView)findViewById(R.id.disc);
+        textViewDiscount = (TextView)findViewById(R.id.desc);
         buttonClose = (Button)findViewById(R.id.buttonClose);
         imageViewStore = (ImageView) findViewById(R.id.flag);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         textStoreName =  (TextView) findViewById(R.id.txt_storeName);
 
         // Alert Dialog
@@ -124,11 +132,13 @@ public class DiscountPage extends AppCompatActivity {
                         String merchantname = data.getString("merchant_name");
                         //String link_image = data.getString("link_image");
 
-                        collapsingToolbarLayout.setTitle(merchantname);
-                        //collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+//                        collapsingToolbarLayout.setTitle(merchantname);
+//                        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+                        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
                         textStoreName.setText(storename);
-                        toolbar.setTitle(merchantname);
+//                        toolbar.setTitle(merchantname);
                         textViewDiscount.setText(disc);
+                        Log.d(TAG, disc);
                         //textViewDiscount.setVisibility(View.VISIBLE);
 
                         // Passes flag images URL into ImageLoader.class

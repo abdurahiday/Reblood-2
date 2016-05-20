@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.erd.reblood.BaseActivity;
 import com.erd.reblood.R;
 import com.erd.reblood.app.AppController;
 import com.erd.reblood.utils.Constants;
@@ -36,21 +36,18 @@ import butterknife.ButterKnife;
 /**
  * Created by E.R.D on 4/2/2016.
  */
-public class LoginActivity extends AppCompatActivity {
-
-    private EditText editUserId;
-    private EditText editPass;
-    Button btnLogin;
+public class LoginActivity extends BaseActivity {
     private ProgressDialog pDialog;
     private static long back_pressed;
-    private Button tvRegister;
-
-    SessionManager session;
-    String URL_LOGIN = Constants.BASE_URL + "/users/login";
-
-    private static final String TAG = LoginActivity.class.getName(); //ersa boleh hapus
+    private SessionManager session;
+    private static String URL_LOGIN = Constants.BASE_URL + "/users/login";
+    private static final String TAG = LoginActivity.class.getName();
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.uid) EditText editUserId;
+    @BindView(R.id.password) EditText editPass;
+    @BindView(R.id.buttonlogin) Button btnLogin;
+    @BindView(R.id.textViewRegister) Button tvRegister;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,11 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
-        editUserId = (EditText) findViewById(R.id.uid);
-        editPass = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.buttonlogin);
-        tvRegister = (Button)findViewById(R.id.textViewRegister);
 
         editUserId.setTypeface(Typeface.DEFAULT);
         editPass.setTypeface(Typeface.DEFAULT);
@@ -74,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
         if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -85,13 +76,11 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = editUserId.getText().toString();
                 String password = editPass.getText().toString();
-                // Check for empty data in the form
                 if (username.trim().length() > 0 && password.trim().length() > 0) {
 
                     ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-                    //Log.e("Problem", connMgr.toString());
                     if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
                         checkLogin(username, password);
                     }
@@ -99,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                             "No Internet Access Available!", Toast.LENGTH_LONG)
                             .show();}
                 } else {
-                    // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(),
                             "Please enter Phone Number and Password", Toast.LENGTH_LONG)
                             .show();
@@ -117,32 +105,12 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void checkLogin(final String username, final String password) {
-        // Tag used to cancel the request
         String tag_string_req = "req_login";
 
         pDialog.setMessage("Logging in ...");
         showDialog();
-        /*if(username.equals("test") && password.equals("test")){
-            //session.setLogin(true);
-            session.createLoginSession(username, password);
-            Log.e(TAG, "ID : " + username);
-            Log.e(TAG, "PASSWORD : " + password);
-            // Launch main activity
-            Intent intent = new Intent(Login.this,
-                    Menu_utama.class);
-            startActivity(intent);
-            finish();
 
-
-        }else {
-            Toast.makeText(getApplicationContext(),
-                    "LOGIN ERROR", Toast.LENGTH_LONG).show();
-            hideDialog();
-
-        }*/
-
-        StringRequest strReq = new StringRequest(Request.Method.POST, URL_LOGIN, new Response.Listener<String>()
-        {
+        StringRequest strReq = new StringRequest(Request.Method.POST, URL_LOGIN, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -159,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                     session.setLogin(true);
                     session.createLoginSession(username, password, cid, firstname, lastname);
 
-                    // Launch main activity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("fname", firstname);
@@ -167,45 +134,10 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("pic", pic);
                     intent.putExtra("status", status);
 
-                    //Log.d("cid2", "cid2" + cid);
                     startActivity(intent);
                     finish();
-
-                        /**
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString("d_message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-**/
-                    //Intent intent2 = new Intent(LoginActivity.this, TotalAmount.class);
-/**
-                    //startActivity(intent2);
-                    //String error = jObj.getString("d_status");
-                    // String error = "1";
-                    // Check for error node in json
-                    //if (error.equals("00")) {
-                        // user successfully logged in
-                        // Create login session
-                    session.setLogin(true);
-                    session.createLoginSession(username, password);
-                        // Launch main activity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("cid", cid);
-                    Log.d("cid", "cid" + cid);
-                    startActivity(intent);
-                    finish();
-**/
-                    /**
-                    } else {
-                        // Error in login. Get the error message
-                        String errorMsg = jObj.getString("d_message");
-                        Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-                    }
-**/
 
                 } catch (JSONException e) {
-                    // JSON error
                     e.printStackTrace();
                 }
             }
@@ -220,26 +152,19 @@ public class LoginActivity extends AppCompatActivity {
                         //Log.d("salah", "salah" + error.toString());
                         Toast.makeText(getApplicationContext(), "Please try again later", Toast.LENGTH_LONG).show();
                     }
-
                     hideDialog();
-
                 }else{ //DATA GIVEN
                     Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     hideDialog();}}
         }) {
-
             @Override
             protected Map<String, String> getParams() {
-                // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("cid", username);
                 params.put("pin", password);
-                //params.put("d_version",d_version);
                 return params;
             }
         };
-
-        // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 

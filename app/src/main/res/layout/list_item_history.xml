@@ -1,111 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/cardlist_item"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_row_selector"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp">
+    card_view:cardElevation="@dimen/cardview_default_elevation"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_margin="10dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="@dimen/pad_history"
-        android:layout_toRightOf="@+id/relativeLayout"
-        android:layout_toEndOf="@+id/relativeLayout">
+        android:background="@drawable/list_row_selector"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:paddingLeft="@dimen/pad_history"
+            android:layout_toRightOf="@+id/relativeLayout"
+            android:layout_toEndOf="@+id/relativeLayout">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/merch"
+                    android:textSize="@dimen/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Merch#"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/frame"
+                    android:layout_toEndOf="@+id/frame"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:text="Merchant Name"
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/title"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <TextView
+                android:textColor="#CF131C"
+                android:id="@+id/name"
+                android:textSize="@dimen/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Store Name"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:scrollHorizontally="true"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:text="19-12-1990"
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_marginTop="1dip"
+                android:textColor="@drawable/text_color_black"
+                android:textSize="@dimen/rating" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/merch"
-                android:textSize="@dimen/title"
+                android:textSize="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Merch#"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/frame"
-                android:layout_toEndOf="@+id/frame"
-                android:visibility="gone" />
+                android:text="Rp"
+                android:layout_marginRight="5dp"
+                android:id="@+id/textView3" />
 
             <TextView
-                android:text="Merchant Name"
-                android:id="@+id/title"
+                android:text="10000"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/title"
-                android:textStyle="bold" />
+                android:textSize="15dp" />
 
         </LinearLayout>
 
-        <TextView
-            android:textColor="#CF131C"
-            android:id="@+id/name"
-            android:textSize="@dimen/title"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Store Name"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:scrollHorizontally="true"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:id="@+id/relativeLayout">
 
-        <TextView
-            android:text="19-12-1990"
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_marginTop="1dip"
-            android:textColor="@drawable/text_color_black"
-            android:textSize="@dimen/rating" />
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_firstLetter"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_vertical"/>
 
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:visibility="gone">
+    </RelativeLayout>
 
-        <TextView
-            android:textSize="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rp"
-            android:layout_marginRight="5dp"
-            android:id="@+id/textView3" />
-
-        <TextView
-            android:text="10000"
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout">
-
-        <ImageView
-            android:id="@+id/iv_firstLetter"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_vertical"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>
